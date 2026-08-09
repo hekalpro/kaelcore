@@ -11,403 +11,83 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=VT323&display=swap" rel="stylesheet">
-
-<style>
-  /* ============================================
-     DESIGN TOKENS — mengikuti design-system.md
-     ============================================ */
-  :root {
-    /* Warna */
-    --void-black: #0B0B0F;
-    --phosphor-cyan: #4DFFF3;
-    --signal-magenta: #FF3EA5;
-    --chrome-silver: #C8CCD4;
-    --chrome-silver-light: #E4E7EC;
-    --steel-blue: #1B3A6B;
-    --steel-blue-light: #2C5391;
-    --ink: #14161A;
-
-    /* Bevel (highlight/shadow 2 lapis) */
-    --bevel-light: #FFFFFF;
-    --bevel-dark: #6E737C;
-
-    /* Tipografi — fallback system font disertakan di setiap stack */
-    --font-glitch: 'VT323', 'Courier New', monospace;
-    --font-ui: Tahoma, 'MS Sans Serif', Geneva, sans-serif;
-    --font-body: Verdana, Geneva, sans-serif;
-    --font-utility: 'IBM Plex Mono', 'Consolas', monospace;
-
-    /* Spacing */
-    --unit: 8px;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
-    font-family: var(--font-ui);
-    color: var(--ink);
-  }
-
-  /* ============================================
-     DESKTOP
-     ============================================ */
-  .desktop {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    background: linear-gradient(160deg, #0F2A3D 0%, #163B52 45%, #0B1F30 100%);
-    overflow: hidden;
-  }
-
-  /* Scanline overlay tipis — bahasa webcore, hanya di background/taskbar,
-     TIDAK menembus isi window (window harus tetap stabil & mudah dibaca) */
-  .scanlines {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.035) 0px,
-      rgba(255,255,255,0.035) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-    z-index: 1;
-  }
-
-  /* ============================================
-     DESKTOP ICONS
-     ============================================ */
-  .icons {
-    position: absolute;
-    top: var(--unit);
-    left: var(--unit);
-    display: grid;
-    grid-template-rows: repeat(4, 90px);
-    grid-auto-flow: column;
-    gap: var(--unit);
-    z-index: 2;
-  }
-
-  .icon {
-    width: 80px;
-    height: 90px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    padding-top: 6px;
-    cursor: default;
-    user-select: none;
-  }
-
-  .icon-glyph {
-    width: 40px;
-    height: 40px;
-    background: var(--chrome-silver);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-utility);
-    font-size: 18px;
-    color: var(--steel-blue);
-    image-rendering: pixelated;
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      inset -1px -1px 0 var(--bevel-dark);
-  }
-
-  .icon-label {
-    font-size: 11px;
-    color: #F1F2F4;
-    text-align: center;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
-    line-height: 1.3;
-  }
-
-  /* ============================================
-     WINDOW
-     ============================================ */
-  .window {
-    position: absolute;
-    top: 90px;
-    left: 220px;
-    width: 420px;
-    background: var(--chrome-silver);
-    border: 2px solid var(--ink);
-    border-radius: 3px 3px 0 0;
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      4px 4px 0 rgba(0,0,0,0.4);
-    z-index: 3;
-  }
-
-  .titlebar {
-    height: 28px;
-    padding: 0 4px 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(to bottom, var(--steel-blue-light), var(--steel-blue));
-    border-radius: 1px 1px 0 0;
-  }
-
-  .titlebar-title {
-    font-family: var(--font-ui);
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    color: #F1F2F4;
-    text-transform: uppercase;
-  }
-
-  .titlebar-controls {
-    display: flex;
-    gap: 3px;
-  }
-
-  .title-btn {
-    width: 18px;
-    height: 18px;
-    background: var(--chrome-silver);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-family: var(--font-ui);
-    color: var(--ink);
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      inset -1px -1px 0 var(--bevel-dark);
-    cursor: default;
-  }
-
-  .title-btn:active,
-  .title-btn.is-pressed {
-    box-shadow:
-      inset -1px -1px 0 var(--bevel-light),
-      inset 1px 1px 0 var(--bevel-dark);
-  }
-
-  .window-content {
-    padding: calc(var(--unit) * 2);
-    font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--ink);
-    background: var(--chrome-silver-light);
-    min-height: 160px;
-  }
-
-  .window-content h1 {
-    font-family: var(--font-ui);
-    font-size: 15px;
-    margin: 0 0 var(--unit) 0;
-  }
-
-  .window-content p {
-    margin: 0 0 var(--unit) 0;
-  }
-
-  .window-content .placeholder-tag {
-    display: inline-block;
-    font-family: var(--font-utility);
-    font-size: 10px;
-    background: var(--chrome-silver);
-    padding: 2px 6px;
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      inset -1px -1px 0 var(--bevel-dark);
-  }
-
-  /* ============================================
-     TASKBAR
-     ============================================ */
-  .taskbar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--steel-blue-light), var(--steel-blue));
-    border-top: 2px solid var(--bevel-light);
-    display: flex;
-    align-items: center;
-    padding: 0 6px;
-    gap: 6px;
-    z-index: 4;
-  }
-
-  .menu-btn {
-    height: 28px;
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--chrome-silver);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    color: var(--ink);
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      inset -1px -1px 0 var(--bevel-dark);
-    cursor: default;
-  }
-
-  .menu-btn .glyph {
-    width: 14px;
-    height: 14px;
-    background: var(--phosphor-cyan);
-    box-shadow:
-      inset 1px 1px 0 rgba(255,255,255,0.7),
-      inset -1px -1px 0 rgba(0,0,0,0.3);
-  }
-
-  .taskbar-divider {
-    width: 2px;
-    align-self: stretch;
-    margin: 6px 0;
-    box-shadow: inset 1px 0 0 var(--bevel-dark), inset -1px 0 0 var(--bevel-light);
-  }
-
-  .task-btn {
-    height: 28px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--chrome-silver);
-    font-family: var(--font-ui);
-    font-size: 12px;
-    color: var(--ink);
-    box-shadow:
-      inset -1px -1px 0 var(--bevel-light),
-      inset 1px 1px 0 var(--bevel-dark);
-    cursor: default;
-  }
-
-  .task-btn .glyph {
-    width: 12px;
-    height: 12px;
-    background: var(--steel-blue);
-  }
-
-  .taskbar-spacer {
-    flex: 1;
-  }
-
-  .taskbar-clock {
-    height: 28px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    background: var(--chrome-silver);
-    font-family: var(--font-utility);
-    font-size: 12px;
-    letter-spacing: 1px;
-    color: var(--ink);
-    box-shadow:
-      inset 1px 1px 0 var(--bevel-light),
-      inset -1px -1px 0 var(--bevel-dark);
-  }
-
-  /* Anotasi validasi — tidak ikut dalam desain final,
-     hanya penanda sementara untuk sesi review ini */
-  .note {
-    position: absolute;
-    bottom: 48px;
-    right: var(--unit);
-    max-width: 260px;
-    background: rgba(11,11,15,0.85);
-    color: var(--phosphor-cyan);
-    font-family: var(--font-utility);
-    font-size: 10px;
-    line-height: 1.5;
-    padding: 8px 10px;
-    border: 1px solid var(--phosphor-cyan);
-    z-index: 5;
-  }
-</style>
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <div class="desktop">
-    <div class="scanlines"></div>
+<div class="desktop">
+  <div class="scanlines"></div>
 
-    <!-- IKON DESKTOP -->
-    <div class="icons">
-      <div class="icon">
-        <div class="icon-glyph">AM</div>
-        <div class="icon-label">About Me</div>
-      </div>
-      <div class="icon">
-        <div class="icon-glyph">MD</div>
-        <div class="icon-label">Media</div>
-      </div>
-      <div class="icon">
-        <div class="icon-glyph">MU</div>
-        <div class="icon-label">Music</div>
-      </div>
-      <div class="icon">
-        <div class="icon-glyph">CA</div>
-        <div class="icon-label">Calendar</div>
-      </div>
-      <div class="icon">
-        <div class="icon-glyph">CL</div>
-        <div class="icon-label">Clock</div>
-      </div>
-      <div class="icon">
-        <div class="icon-glyph">ST</div>
-        <div class="icon-label">Settings</div>
-      </div>
+  <!-- IKON DESKTOP -->
+  <div class="icons">
+    <div class="icon">
+      <div class="icon-glyph">AM</div>
+      <div class="icon-label">About Me</div>
     </div>
-
-    <!-- CONTOH WINDOW -->
-    <div class="window">
-      <div class="titlebar">
-        <span class="titlebar-title">About Me</span>
-        <div class="titlebar-controls">
-          <div class="title-btn">_</div>
-          <div class="title-btn">□</div>
-          <div class="title-btn">✕</div>
-        </div>
-      </div>
-      <div class="window-content">
-        <h1>Halo, ini contoh window.</h1>
-        <p>
-          Ini adalah placeholder konten untuk memvalidasi proporsi, warna,
-          dan tipografi window sebelum WindowManager dibangun.
-        </p>
-        <span class="placeholder-tag">content.js — placeholder</span>
-      </div>
+    <div class="icon">
+      <div class="icon-glyph">MD</div>
+      <div class="icon-label">Media</div>
     </div>
-
-    <!-- TASKBAR -->
-    <div class="taskbar">
-      <div class="menu-btn">
-        <div class="glyph"></div>
-        MENU
-      </div>
-      <div class="taskbar-divider"></div>
-      <div class="task-btn">
-        <div class="glyph"></div>
-        About Me
-      </div>
-      <div class="taskbar-spacer"></div>
-      <div class="taskbar-clock">14:32</div>
+    <div class="icon">
+      <div class="icon-glyph">MU</div>
+      <div class="icon-label">Music</div>
     </div>
-
-    <div class="note">
-      MOCKUP VALIDASI — belum ada JS/logika.<br/>
-      Ikon "AM / MD / MU..." = placeholder teks,<br/>
-      akan diganti pixel-art icon asli nanti.
+    <div class="icon">
+      <div class="icon-glyph">CA</div>
+      <div class="icon-label">Calendar</div>
+    </div>
+    <div class="icon">
+      <div class="icon-glyph">CL</div>
+      <div class="icon-label">Clock</div>
+    </div>
+    <div class="icon">
+      <div class="icon-glyph">ST</div>
+      <div class="icon-label">Settings</div>
     </div>
   </div>
 
+  <!-- CONTOH WINDOW -->
+  <div class="window">
+    <div class="titlebar">
+      <span class="titlebar-title">About Me</span>
+      <div class="titlebar-controls">
+        <div class="title-btn">_</div>
+        <div class="title-btn">□</div>
+        <div class="title-btn">✕</div>
+      </div>
+    </div>
+    <div class="window-content">
+      <h1>Halo, ini contoh window.</h1>
+      <p>
+        Ini adalah placeholder konten untuk memvalidasi proporsi, warna,
+        dan tipografi window sebelum WindowManager dibangun.
+      </p>
+      <span class="placeholder-tag">content.js — placeholder</span>
+    </div>
+  </div>
+
+  <!-- TASKBAR -->
+  <div class="taskbar">
+    <div class="menu-btn">
+      <div class="glyph"></div>
+      MENU
+    </div>
+    <div class="taskbar-divider"></div>
+    <div class="task-btn">
+      <div class="glyph"></div>
+      About Me
+    </div>
+    <div class="taskbar-spacer"></div>
+    <div class="taskbar-clock">14:32</div>
+  </div>
+
+  <div class="note">
+    MOCKUP VALIDASI — belum ada JS/logika.<br/>
+    Ikon "AM / MD / MU..." = placeholder teks,<br/>
+    akan diganti pixel-art icon asli nanti.
+  </div>
+</div>
+
+<script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
