@@ -301,6 +301,58 @@ body {
     inset -1px -1px 0 var(--bevel-dark);
 }
 
+/* ============================================
+   DESKTOP ICON — SELECTION STATE (Phase 1)
+   ============================================ */
+.icon.is-selected .icon-label {
+  background: var(--steel-blue);
+  color: #F1F2F4;
+}
+
+.icon.is-selected .icon-glyph {
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-dark),
+    inset -1px -1px 0 var(--bevel-light);
+}
+
+.icon:focus {
+  outline: none;
+}
+
+.icon:focus-visible {
+  outline: 1px dotted var(--phosphor-cyan);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   WINDOW MANAGER STATES — Phase 1A
+   ============================================ */
+.window.is-minimized,
+.window.is-closed {
+  display: none;
+}
+
+.window.is-maximized {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 40px); /* 40px = tinggi .taskbar */
+}
+
+.task-btn.is-hidden {
+  display: none;
+}
+
+/* Reset default browser styling agar <button class="title-btn">
+   tetap identik secara visual dengan versi <div> sebelumnya */
+button.title-btn {
+  border: none;
+  margin: 0;
+  line-height: normal;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 /* Anotasi validasi — tidak ikut dalam desain final,
    hanya penanda sementara untuk sesi review ini */
 .note {
