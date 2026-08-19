@@ -47,13 +47,13 @@
   </div>
 
   <!-- CONTOH WINDOW -->
-  <div class="window">
+  <div class="window" data-window-id="about-me">
     <div class="titlebar">
       <span class="titlebar-title">About Me</span>
       <div class="titlebar-controls">
-        <div class="title-btn">_</div>
-        <div class="title-btn">□</div>
-        <div class="title-btn">✕</div>
+        <button class="title-btn" data-action="minimize">_</button>
+        <button class="title-btn" data-action="maximize">□</button>
+        <button class="title-btn" data-action="close">✕</button>
       </div>
     </div>
     <div class="window-content">
@@ -73,7 +73,7 @@
       MENU
     </div>
     <div class="taskbar-divider"></div>
-    <div class="task-btn">
+    <div class="task-btn" data-window-id="about-me">
       <div class="glyph"></div>
       About Me
     </div>
