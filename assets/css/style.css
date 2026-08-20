@@ -325,6 +325,28 @@ body {
 }
 
 /* ============================================
+   ACTIVE / INACTIVE STATE — Phase 2
+   ============================================ */
+/* Window default (baseline) tetap memakai gradient titlebar yang sudah
+   ada — itu SECARA VISUAL merepresentasikan "active". Window yang
+   TIDAK aktif diredupkan dengan token yang sudah ada, tanpa warna baru.
+   Baseline visual untuk satu window (yang selalu aktif secara default)
+   tidak berubah sama sekali. */
+.window:not(.is-active) .titlebar {
+  background: linear-gradient(to bottom, var(--chrome-silver), var(--bevel-dark));
+}
+
+.window:not(.is-active) .titlebar-title {
+  color: var(--ink);
+}
+
+/* Taskbar entry mendapat tint phosphor-cyan saat window terkait aktif —
+   konsisten dengan aksen cyan yang sudah dipakai di menu-btn glyph. */
+.task-btn.is-active {
+  background: var(--phosphor-cyan);
+}
+
+/* ============================================
    WINDOW MANAGER STATES — Phase 1A
    ============================================ */
 .window.is-minimized,
