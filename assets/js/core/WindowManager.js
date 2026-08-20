@@ -25,6 +25,7 @@ class WindowManager {
   constructor() {
     this.windows = new Map(); // windowId -> { el, taskBtn, state }
     this.zCounter = Z_INDEX_BASE;
+    this.activeWindowId = null; // window mana yang sedang aktif/fokus
   }
 
   // Mendaftarkan semua elemen .window yang punya data-window-id
@@ -94,6 +95,44 @@ class WindowManager {
     if (!win) return;
     this.zCounter += 1;
     win.el.style.zIndex = String(this.zCounter);
+    this._setActiveWindow(id);
+  }
+
+  // Menandai satu window sebagai aktif, melepas status aktif dari
+  // window sebelumnya (baik pada window maupun taskbar entry-nya).
+  // Generik untuk banyak window — tidak hardcode ke id tertentu.
+  _setActiveWindow(id) {
+    if (this.activeWindowId === id) return;
+
+    if (this.activeWindowId) {
+      const prev = this.windows.get(this.activeWindowId);
+      if (prev) {
+        prev.el.classList.remove('is-active');
+        if (prev.taskBtn) prev.taskBtn.classList.remove('is-active');
+      }
+    }
+
+    const win = this.windows.get(id);
+    if (win) {
+      win.el.classList.add('is-active');
+      if (win.taskBtn) win.taskBtn.classList.add('is-active');
+    }
+
+    this.activeWindowId = id;
+  }
+
+  // Melepas status aktif suatu window (dipakai saat minimize/close),
+  // karena window yang tidak terlihat tidak seharusnya tetap tercatat
+  // sebagai window yang sedang fokus.
+  _clearActiveWindow(id) {
+    const win = this.windows.get(id);
+    if (win) {
+      win.el.classList.remove('is-active');
+      if (win.taskBtn) win.taskBtn.classList.remove('is-active');
+    }
+    if (this.activeWindowId === id) {
+      this.activeWindowId = null;
+    }
   }
 
   _attachFocusHandler(id) {
@@ -126,6 +165,7 @@ class WindowManager {
     win.state.open = false;
     win.el.classList.add('is-closed');
     if (win.taskBtn) win.taskBtn.classList.add('is-hidden');
+    this._clearActiveWindow(id);
   }
 
   _minimize(id) {
@@ -133,6 +173,7 @@ class WindowManager {
     if (!win) return;
     win.state.minimized = true;
     win.el.classList.add('is-minimized');
+    this._clearActiveWindow(id);
   }
 
   _restoreFromMinimize(id) {
