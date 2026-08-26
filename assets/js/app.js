@@ -1,21 +1,28 @@
 // ============================================
 // WEBCORE OS — APP ENTRY POINT
-// Phase 1A: Window Manager
+// Phase 1: Desktop System
 // ============================================
 //
 // app.js tetap menjadi entry point tipis.
-// Seluruh logic WindowManager berada di assets/js/core/WindowManager.js —
-// file ini hanya menginisialisasinya.
+// Logic ada di masing-masing manager:
+//   - assets/js/core/WindowManager.js
+//   - assets/js/core/DesktopManager.js
+// File ini hanya menginisialisasi keduanya dan menghubungkan
+// DesktopManager dengan instance WindowManager yang sama.
 //
-// System module lain (DesktopManager, ThemeManager, dll) akan
+// System module lain (ThemeManager, StateManager, dll) akan
 // ditambahkan pada fase-fase berikutnya sesuai roadmap di
 // WEBCORE_ARCHITECTURE.md.
 
 import { WindowManager } from './core/WindowManager.js';
+import { DesktopManager } from './core/DesktopManager.js';
 
 function init() {
   const windowManager = new WindowManager();
   windowManager.init();
+
+  const desktopManager = new DesktopManager(windowManager);
+  desktopManager.init();
 }
 
 document.addEventListener('DOMContentLoaded', init);
