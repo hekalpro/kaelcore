@@ -1,23 +1,27 @@
 // ============================================
 // WEBCORE OS — APP ENTRY POINT
-// Phase 1: Desktop System
+// Phase 3A: State Manager
 // ============================================
 //
 // app.js tetap menjadi entry point tipis.
 // Logic ada di masing-masing manager:
 //   - assets/js/core/WindowManager.js
 //   - assets/js/core/DesktopManager.js
-// File ini hanya menginisialisasi keduanya dan menghubungkan
-// DesktopManager dengan instance WindowManager yang sama.
+//   - assets/js/core/StateManager.js
+// File ini hanya menginisialisasi manager yang ada.
 //
-// System module lain (ThemeManager, StateManager, dll) akan
-// ditambahkan pada fase-fase berikutnya sesuai roadmap di
-// WEBCORE_ARCHITECTURE.md.
+// Catatan: StateManager belum punya consumer pada Phase 3A ini
+// (ThemeManager, WallpaperManager, dll belum diimplementasikan).
+// Inisialisasi di sini murni supaya instance siap dipakai begitu
+// consumer pertamanya dibuat di fase berikutnya.
 
 import { WindowManager } from './core/WindowManager.js';
 import { DesktopManager } from './core/DesktopManager.js';
+import { StateManager } from './core/StateManager.js';
 
 function init() {
+  const stateManager = new StateManager();
+
   const windowManager = new WindowManager();
   windowManager.init();
 
