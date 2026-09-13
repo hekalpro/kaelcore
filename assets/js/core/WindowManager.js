@@ -39,8 +39,10 @@ class WindowManager {
     const id = el.dataset.windowId;
     const taskBtn = document.querySelector(`.task-btn[data-window-id="${id}"]`);
 
+    const startsClosed = el.classList.contains('is-closed');
+
     const state = {
-      open: true,
+      open: !startsClosed,
       minimized: false,
       maximized: false,
       prevRect: null, // { top, left, width, height } sebelum maximize
@@ -48,7 +50,14 @@ class WindowManager {
 
     this.windows.set(id, { el, taskBtn, state });
 
-    this._bringToFront(id);
+    if (startsClosed && taskBtn) {
+      taskBtn.classList.add('is-hidden');
+    }
+
+    if (!startsClosed) {
+      this._bringToFront(id);
+    }
+
     this._attachFocusHandler(id);
     this._attachDragHandler(id);
     this._attachControlHandlers(id);
