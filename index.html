@@ -66,6 +66,33 @@
     </div>
   </div>
 
+  <!-- SETTINGS WINDOW — mulai dalam keadaan closed (class is-closed),
+       terbuka lewat double-click icon Settings -->
+  <div class="window is-closed" data-window-id="settings" style="top: 140px; left: 480px;">
+    <div class="titlebar">
+      <span class="titlebar-title">Settings</span>
+      <div class="titlebar-controls">
+        <button class="title-btn" data-action="minimize">_</button>
+        <button class="title-btn" data-action="maximize">□</button>
+        <button class="title-btn" data-action="close">✕</button>
+      </div>
+    </div>
+    <div class="window-content settings-content">
+      <h1>Appearance</h1>
+      <fieldset class="theme-options">
+        <legend>Theme</legend>
+        <label class="theme-option">
+          <input type="radio" name="theme" value="dark">
+          Dark
+        </label>
+        <label class="theme-option">
+          <input type="radio" name="theme" value="light">
+          Light
+        </label>
+      </fieldset>
+    </div>
+  </div>
+
   <!-- TASKBAR -->
   <div class="taskbar">
     <div class="menu-btn">
@@ -76,6 +103,10 @@
     <div class="task-btn" data-window-id="about-me">
       <div class="glyph"></div>
       About Me
+    </div>
+    <div class="task-btn" data-window-id="settings">
+      <div class="glyph"></div>
+      Settings
     </div>
     <div class="taskbar-spacer"></div>
     <div class="taskbar-clock">14:32</div>
