@@ -24,6 +24,32 @@
 
   /* Spacing */
   --unit: 8px;
+
+  /* Theme-aware tokens — Phase 3B. Nilai default di sini = baseline
+     dark yang sudah divalidasi sejak Phase 0. Di-override hanya di
+     [data-theme="light"] di bawah. */
+  --desktop-bg: linear-gradient(160deg, #0F2A3D 0%, #163B52 45%, #0B1F30 100%);
+  --icon-label-color: #F1F2F4;
+  --titlebar-title-color: #F1F2F4;
+}
+
+/* ============================================
+   LIGHT THEME OVERRIDES — Phase 3B
+   ============================================
+   Refactor MINIMAL: hanya 3 token di atas yang dibuat theme-aware,
+   karena hanya ketiganya yang berdampak langsung pada keterbacaan teks
+   (kontras teks vs background). Titik non-kritis (shadow/bevel rgba di
+   .icon-label, .window, .menu-btn .glyph) sengaja TIDAK diubah sesuai
+   keputusan produk — dampaknya kecil dan tidak worth menambah risiko.
+
+   --titlebar-title-color TIDAK di-override di sini secara sengaja:
+   titlebar selalu memakai gradient steel-blue (tidak berubah per
+   theme), jadi teks terang #F1F2F4 tetap kontras di kedua theme. Token
+   ini dibuat theme-aware untuk konsistensi/future-proofing, bukan
+   karena nilainya perlu berbeda saat ini. */
+[data-theme="light"] {
+  --desktop-bg: linear-gradient(160deg, var(--chrome-silver-light) 0%, var(--chrome-silver) 55%, var(--steel-blue-light) 100%);
+  --icon-label-color: var(--ink);
 }
 
 * { box-sizing: border-box; }
@@ -43,7 +69,7 @@ body {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(160deg, #0F2A3D 0%, #163B52 45%, #0B1F30 100%);
+  background: var(--desktop-bg);
   overflow: hidden;
 }
 
@@ -108,7 +134,7 @@ body {
 
 .icon-label {
   font-size: 11px;
-  color: #F1F2F4;
+  color: var(--icon-label-color);
   text-align: center;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
   line-height: 1.3;
@@ -145,7 +171,7 @@ body {
   font-family: var(--font-ui);
   font-size: 12px;
   letter-spacing: 0.5px;
-  color: #F1F2F4;
+  color: var(--titlebar-title-color);
   text-transform: uppercase;
 }
 
@@ -206,6 +232,41 @@ body {
   box-shadow:
     inset 1px 1px 0 var(--bevel-light),
     inset -1px -1px 0 var(--bevel-dark);
+}
+
+/* ============================================
+   SETTINGS — Phase 3C
+   ============================================ */
+.settings-content .theme-options {
+  border: 1px solid var(--bevel-dark);
+  padding: var(--unit);
+  margin: 0;
+}
+
+.settings-content .theme-options legend {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 0 4px;
+  color: var(--ink);
+}
+
+.settings-content .theme-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.settings-content input[type="radio"] {
+  accent-color: var(--steel-blue);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 /* ============================================
