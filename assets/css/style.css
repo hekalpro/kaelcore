@@ -25,31 +25,51 @@
   /* Spacing */
   --unit: 8px;
 
-  /* Theme-aware tokens — Phase 3B. Nilai default di sini = baseline
+  /* Theme-aware tokens — Phase 3B/3C. Nilai default di sini = baseline
      dark yang sudah divalidasi sejak Phase 0. Di-override hanya di
      [data-theme="light"] di bawah. */
   --desktop-bg: linear-gradient(160deg, #0F2A3D 0%, #163B52 45%, #0B1F30 100%);
   --icon-label-color: #F1F2F4;
   --titlebar-title-color: #F1F2F4;
+  --taskbar-bg: linear-gradient(to bottom, var(--steel-blue-light), var(--steel-blue));
+  --taskbar-border-color: var(--bevel-light);
 }
 
 /* ============================================
-   LIGHT THEME OVERRIDES — Phase 3B
+   LIGHT THEME OVERRIDES — Phase 3B/3C
    ============================================
-   Refactor MINIMAL: hanya 3 token di atas yang dibuat theme-aware,
-   karena hanya ketiganya yang berdampak langsung pada keterbacaan teks
-   (kontras teks vs background). Titik non-kritis (shadow/bevel rgba di
-   .icon-label, .window, .menu-btn .glyph) sengaja TIDAK diubah sesuai
-   keputusan produk — dampaknya kecil dan tidak worth menambah risiko.
+   Prinsip: "Light Theme = Light UI Chrome", bukan "Light Wallpaper".
 
-   --titlebar-title-color TIDAK di-override di sini secara sengaja:
-   titlebar selalu memakai gradient steel-blue (tidak berubah per
-   theme), jadi teks terang #F1F2F4 tetap kontras di kedua theme. Token
-   ini dibuat theme-aware untuk konsistensi/future-proofing, bukan
-   karena nilainya perlu berbeda saat ini. */
+   Wallpaper desktop (--desktop-bg) SENGAJA TIDAK di-override di sini —
+   wallpaper adalah konsep terpisah dari theme dan harus tetap identik
+   di Dark maupun Light (WallpaperManager direncanakan Phase 5).
+
+   --icon-label-color JUGA TIDAK di-override: label icon desktop selalu
+   duduk di atas wallpaper yang selalu gelap, jadi warna terang
+   (#F1F2F4) tetap harus dipakai di kedua theme agar tetap terbaca.
+
+   Window/window-content SENGAJA TIDAK diubah: baseline Dark yang
+   divalidasi sejak Phase 0 sudah memakai chrome-silver (terang) dengan
+   teks ink (gelap) — sama persis dengan spesifikasi Light. Mengubah
+   window Dark menjadi gelap akan mengubah visual baseline yang sudah
+   disetujui, sesuai keputusan produk.
+
+   Titlebar SENGAJA TIDAK diubah: titlebar tetap steel-blue di kedua
+   theme (keputusan produk eksplisit), teks terang tetap kontras.
+
+   Perbedaan visual Light theme untuk Phase 3 ini dimulai dari taskbar:
+   --taskbar-bg dan --taskbar-border-color diubah menjadi light
+   chrome/silver. Elemen di dalam taskbar (menu-btn, task-btn,
+   taskbar-clock) TIDAK perlu ikut diubah — semuanya sudah memakai
+   --chrome-silver sebagai background sendiri (independen dari warna
+   strip taskbar) dengan teks --ink, jadi tetap terbaca tanpa
+   perubahan apapun. --taskbar-border-color diubah ke --bevel-dark
+   (bukan --bevel-light) supaya garis tepi atas taskbar tetap terlihat
+   sebagai bevel — --bevel-light (putih) akan nyaris tak terlihat di
+   atas taskbar yang sekarang terang. */
 [data-theme="light"] {
-  --desktop-bg: linear-gradient(160deg, var(--chrome-silver-light) 0%, var(--chrome-silver) 55%, var(--steel-blue-light) 100%);
-  --icon-label-color: var(--ink);
+  --taskbar-bg: linear-gradient(to bottom, var(--chrome-silver-light), var(--chrome-silver));
+  --taskbar-border-color: var(--bevel-dark);
 }
 
 * { box-sizing: border-box; }
@@ -278,8 +298,8 @@ body {
   left: 0;
   right: 0;
   height: 40px;
-  background: linear-gradient(to bottom, var(--steel-blue-light), var(--steel-blue));
-  border-top: 2px solid var(--bevel-light);
+  background: var(--taskbar-bg);
+  border-top: 2px solid var(--taskbar-border-color);
   display: flex;
   align-items: center;
   padding: 0 6px;
